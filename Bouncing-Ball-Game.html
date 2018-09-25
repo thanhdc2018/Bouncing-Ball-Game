@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> Bouncing-Ball-Game</title>
+</head>
+<body>
+<canvas id="myCanvas" width="1200" height="600" style="border:1px solid #000000;"> </canvas>
+<script>
+    var canvas = document.getElementById("myCanvas");
+    var ctx = canvas.getContext("2d");
+
+    const COLOUR =[
+        "#ff0000",
+        "#ff9c64",
+        "#00FF79",
+        "#00ff0e",
+        "#f4ff00",
+        "#0306ff",
+        "#000000",
+        "#ff00cc",
+        "#62ff8e",
+        "#ffb714",
+        "#00ffd7" ];
+
+
+    let Cicle = function(x,y,r,color,strokecolor,velx,vely){
+        this.x = x;
+        this.y = y;
+        this.r = r;
+        this.velx = velx;
+        this.vely = vely;
+
+        this.draw = function(){
+            ctx.beginPath();
+            ctx.fillStyle = color;
+            ctx.arc(this.x,this.y, this.r,0, 2*Math.PI);
+            ctx.closePath();
+            ctx.fill();
+            ctx.lineWidth = r/3;
+            ctx.strokeStyle = strokecolor;
+            ctx.stroke();
+
+        };
+        this.move = function(){
+            this.x += this.velx;
+            this.y += this.vely;
+        };
+        this.refect = function(){
+            if ((this.x - this.r*4/3)< 0 ){
+                this.vely *= 1;
+                this.velx *= -1;
+                let debug = false;
+                console.log("this.x < 0 ");
+            }
+            else if ((this.x + this.r*4/3) >= canvas.width){
+                this.vely *= 1;
+                this.velx *= -1;
+                let debug = false;
+                console.log("this.x >= canvas.width");
+            }
+            else if ((this.y - this.r*4/3) < 0){
+                this.vely *= -1;
+                this.velx *= 1;
+                let debug = false;
+                console.log("this.y < 0");
+            }
+            else if ((this.y + this.r*4/3) >= canvas.height){
+                this.vely *= -1;
+                this.velx *= 1;
+                let debug = false;
+                console.log("this.y >= canvas.height");
+            };
+        }
+    };
+
+    function randomCicle(){
+        let radr = Math.floor(Math.random()*15) + 12;
+        let radx = Math.floor(Math.random() * canvas.width/2) + Math.floor(radr*4/3);
+        let rady = Math.floor(Math.random() * canvas.height/5) + Math.floor(radr*4/3);
+        let radvlx =Math.floor(Math.random() * 1) + 2;
+        let radvly =Math.floor(Math.random() * 3) + 4;
+        let colour = COLOUR[Math.floor(Math.random() * COLOUR.length)];
+        let strokecolor = COLOUR[Math.floor(Math.random() * COLOUR.length)];
+        return new Cicle(radx , rady , radr, colour, strokecolor, radvlx, radvly);
+    };
+
+    let ball = randomCicle();
+    function animation(){
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ball.draw();
+        ball.move();
+        ball.refect();
+        // console.log("Toạ độ trước x "+ ball.x + " Toạ độ y " + ball.y);
+        // console.log ("Canvas Width: "+ canvas.width + " canvas height " + canvas.height);
+        // console.log("Toạ độ trước x "+ ball.x + " Toạ độ y " + ball.y);
+    }
+    setInterval(function() {animation()}, 20);
+</script>
+</body>
+</html>
