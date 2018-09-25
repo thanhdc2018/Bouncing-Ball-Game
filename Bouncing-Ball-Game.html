@@ -23,22 +23,24 @@
         "#ffb714",
         "#00ffd7" ];
 
-
+     //class cicle
     let Cicle = function(x,y,r,color,strokecolor,velx,vely){
         this.x = x;
         this.y = y;
         this.r = r;
         this.velx = velx;
         this.vely = vely;
+        this.color = color;
+        this.strokecolor = strokecolor;
 
         this.draw = function(){
             ctx.beginPath();
-            ctx.fillStyle = color;
+            ctx.fillStyle = this.color;
             ctx.arc(this.x,this.y, this.r,0, 2*Math.PI);
             ctx.closePath();
             ctx.fill();
             ctx.lineWidth = r/3;
-            ctx.strokeStyle = strokecolor;
+            ctx.strokeStyle = this.strokecolor;
             ctx.stroke();
 
         };
@@ -50,30 +52,39 @@
             if ((this.x - this.r*4/3)< 0 ){
                 this.vely *= 1;
                 this.velx *= -1;
+                this.color = COLOUR[Math.floor(Math.random() * COLOUR.length)];
+                this.strokecolor = COLOUR[Math.floor(Math.random() * COLOUR.length)];
                 let debug = false;
                 console.log("this.x < 0 ");
             }
             else if ((this.x + this.r*4/3) >= canvas.width){
                 this.vely *= 1;
                 this.velx *= -1;
+                this.color = COLOUR[Math.floor(Math.random() * COLOUR.length)];
+                this.strokecolor = COLOUR[Math.floor(Math.random() * COLOUR.length)];
                 let debug = false;
                 console.log("this.x >= canvas.width");
             }
             else if ((this.y - this.r*4/3) < 0){
                 this.vely *= -1;
                 this.velx *= 1;
+                this.color = COLOUR[Math.floor(Math.random() * COLOUR.length)];
+                this.strokecolor = COLOUR[Math.floor(Math.random() * COLOUR.length)];
                 let debug = false;
                 console.log("this.y < 0");
             }
             else if ((this.y + this.r*4/3) >= canvas.height){
                 this.vely *= -1;
                 this.velx *= 1;
+                this.color = COLOUR[Math.floor(Math.random() * COLOUR.length)];
+                this.strokecolor = COLOUR[Math.floor(Math.random() * COLOUR.length)];
                 let debug = false;
                 console.log("this.y >= canvas.height");
             };
         }
     };
 
+    //make random cicle in first time
     function randomCicle(){
         let radr = Math.floor(Math.random()*15) + 12;
         let radx = Math.floor(Math.random() * canvas.width/2) + Math.floor(radr*4/3);
@@ -85,16 +96,61 @@
         return new Cicle(radx , rady , radr, colour, strokecolor, radvlx, radvly);
     };
 
+    let Rectangle = function(x,y,a,b,color,strokeColor,xslider) {
+        this.a = a;
+        this.b = b;
+        this.x = x;
+        this.y = y;
+        this.color = color || "#000000";
+        this.strokecolor = strokeColor || "#ff0800";
+
+        this.drawRec = function () {
+            ctx.beginPath();
+            ctx.lineWidth = "2";
+            ctx.strokeStyle = this.strokecolor;
+            ctx.rect(this.x, this.y, this.a, this.b);
+            ctx.stroke();
+        };
+
+        this.Rectmove = function () {
+            this.x += this.xslider;
+        };
+        this.moveRight = function () {
+            if (this.xslider <= 0) {
+                this.xslider *= -1;
+            };
+        };
+        this.moveLeft = function () {
+            if (this.xslider >= 0) {
+                this.xslider *= -1;
+            };
+        };
+    };
+
+    window.addEventListener("keydown", function (evt) {
+        switch (evt.key) {
+            case "ArrowRight":
+                Rectangle.moveRight();
+                break;
+            case "ArrowLeft":
+                Rectangle.moveLeft();
+                break;
+        };
+    };
+
+
+    let log = new Rectangle(200,canvas.height-10,300,10);
     let ball = randomCicle();
     function animation(){
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        log.drawRec();
         ball.draw();
         ball.move();
         ball.refect();
         // console.log("Toạ độ trước x "+ ball.x + " Toạ độ y " + ball.y);
         // console.log ("Canvas Width: "+ canvas.width + " canvas height " + canvas.height);
         // console.log("Toạ độ trước x "+ ball.x + " Toạ độ y " + ball.y);
-    }
+    };
     setInterval(function() {animation()}, 20);
 </script>
 </body>
