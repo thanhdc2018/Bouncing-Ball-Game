@@ -72,7 +72,7 @@
             }
             else if ((this.y + this.r*4/3) >= (canvas.height - 50 ) && this.x <= (brick.x +brick.a) && (this.x >= brick.x)){
                 this.vely *= -1;
-                this.velx *= - brick.xvector;
+                this.velx *= brick.xvector;
                 this.color = COLOUR[Math.floor(Math.random() * COLOUR.length)];
                 this.strokecolor = COLOUR[Math.floor(Math.random() * COLOUR.length)];
                 // console.log("this.y >= canvas.height");
