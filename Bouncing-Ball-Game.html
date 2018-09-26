@@ -49,37 +49,33 @@
             this.y += this.vely;
         };
         this.refect = function(){
-            if ((this.x - this.r*4/3)< 0 ){
+            if ((this.x - this.r*4/3)<= 0 ){
                 this.vely *= 1;
                 this.velx *= -1;
                 this.color = COLOUR[Math.floor(Math.random() * COLOUR.length)];
                 this.strokecolor = COLOUR[Math.floor(Math.random() * COLOUR.length)];
-                let debug = false;
-                console.log("this.x < 0 ");
+                // console.log("this.x <= 0 ");
             }
             else if ((this.x + this.r*4/3) >= canvas.width){
                 this.vely *= 1;
                 this.velx *= -1;
                 this.color = COLOUR[Math.floor(Math.random() * COLOUR.length)];
                 this.strokecolor = COLOUR[Math.floor(Math.random() * COLOUR.length)];
-                let debug = false;
-                console.log("this.x >= canvas.width");
+                // console.log("this.x >= canvas.width");
             }
-            else if ((this.y - this.r*4/3) < 0){
+            else if ((this.y - this.r*4/3) <= 0){
                 this.vely *= -1;
                 this.velx *= 1;
                 this.color = COLOUR[Math.floor(Math.random() * COLOUR.length)];
                 this.strokecolor = COLOUR[Math.floor(Math.random() * COLOUR.length)];
-                let debug = false;
-                console.log("this.y < 0");
+                // console.log("this.y <= 0");
             }
-            else if ((this.y + this.r*4/3) >= canvas.height){
+            else if ((this.y + this.r*4/3) >= (canvas.height - 50 ) && this.x <= (brick.x +brick.a) && (this.x >= brick.x)){
                 this.vely *= -1;
                 this.velx *= 1;
                 this.color = COLOUR[Math.floor(Math.random() * COLOUR.length)];
                 this.strokecolor = COLOUR[Math.floor(Math.random() * COLOUR.length)];
-                let debug = false;
-                console.log("this.y >= canvas.height");
+                // console.log("this.y >= canvas.height");
             };
         }
     };
@@ -96,62 +92,71 @@
         return new Cicle(radx , rady , radr, colour, strokecolor, radvlx, radvly);
     };
 
-    let Rectangle = function(x,y,a,b,color,strokeColor,xslider) {
+    let Rectangle = function(x,y,a,b,color,strokeColor,xmove) {
         this.a = a;
         this.b = b;
         this.x = x;
         this.y = y;
+        this.xmove = xmove || 0;
         this.color = color || "#000000";
         this.strokecolor = strokeColor || "#ff0800";
 
         this.drawRec = function () {
             ctx.beginPath();
-            ctx.lineWidth = "2";
+            ctx.lineWidth = this.b/2;
+            ctx.fillStyle = this.color;
             ctx.strokeStyle = this.strokecolor;
-            ctx.rect(this.x, this.y, this.a, this.b);
+            ctx.rect(this.x, this.y-(this.b*3/2), this.a, this.b);
             ctx.stroke();
+            ctx.fill();
         };
 
         this.Rectmove = function () {
-            this.x += this.xslider;
+                this.x = this.xmove;
+                console.log("Toạ độ x của Brick: " +this.x);
+
         };
         this.moveRight = function () {
-            if (this.xslider <= 0) {
-                this.xslider *= -1;
-            };
+            if (this.x +this.a >= canvas.width){
+                this.xmove = this.x;
+            }
+            else {this.xmove = this.x +50;}
+            console.log(this.xmove);
         };
         this.moveLeft = function () {
-            if (this.xslider >= 0) {
-                this.xslider *= -1;
-            };
+            if (this.x <= 0){
+                this.xmove = this.x;
+            }
+            else {this.xmove = this.x -50;};
+            console.log(this.xmove);
         };
     };
+
+    let brick = new Rectangle(200,canvas.height-20,300,20);
 
     window.addEventListener("keydown", function (evt) {
         switch (evt.key) {
             case "ArrowRight":
-                Rectangle.moveRight();
+                brick.moveRight();
                 break;
             case "ArrowLeft":
-                Rectangle.moveLeft();
+                brick.moveLeft();
                 break;
         };
-    };
+    });
 
 
-    let log = new Rectangle(200,canvas.height-10,300,10);
+
     let ball = randomCicle();
     function animation(){
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        log.drawRec();
+        brick.drawRec();
+        brick.Rectmove();
         ball.draw();
         ball.move();
         ball.refect();
-        // console.log("Toạ độ trước x "+ ball.x + " Toạ độ y " + ball.y);
-        // console.log ("Canvas Width: "+ canvas.width + " canvas height " + canvas.height);
-        // console.log("Toạ độ trước x "+ ball.x + " Toạ độ y " + ball.y);
     };
-    setInterval(function() {animation()}, 20);
+    setInterval(function() {animation()}, 50);
 </script>
 </body>
 </html>
